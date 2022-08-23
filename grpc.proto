@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package LiveProto;
+
+// The greeting service definition.
+service LiveMessager {
+  // Sends a greeting
+  rpc HandleJsonMsg (StringMsg) returns (StringMsg);
+  rpc ServerStringRouter(stream StringMsg) returns (stream StringMsg);
+}
+
+message Empty{}
+
+ 
+
+// The request message containing the user's name.
+message StringMsg {
+	string type = 1;
+	string jsonStr = 2;
+}
+
+
