@@ -22,12 +22,11 @@ class Handler(pb2_grpc.LiveMessagerServicer):
     def __init__(self) -> None:
         super().__init__()
         self.lock = threading.Lock()
-        self.clientId = 0
         self.msgDic = {}
 
     def HandleJsonMsg(self,request:pb2.StringMsg,context):
         # print('HandleJsonMsg',threading.get_ident())
-        Log(f"收到:{request}")
+        Log(f"收到:{request} {context.peer()}")
         with self.lock:
             for k in self.msgDic:
                 self.msgDic[k].append(request)
@@ -35,21 +34,30 @@ class Handler(pb2_grpc.LiveMessagerServicer):
         return pb2.StringMsg()
 
     def JsonMsgRouter(self,request:pb2.Empty,context):
-        self.clientId+=1
-        id = self.clientId
-        msgList = []
-        self.msgDic[id] = msgList
 
+        peer = context.peer()
+        msgList=[]
+        self.msgDic[peer] = msgList
+
+        def stop_stream():
+            with self.lock:
+                del self.msgDic[peer]
+
+        context.add_callback(stop_stream)
+        
         while True:
+            with self.lock:
+                if not peer in self.msgDic:
+                    break
             if len(msgList)==0:
                 time.sleep(0.1)
             else:
                 with self.lock:
                     for msg in msgList:
-                        # print('JsonMsgRouter',threading.get_ident())
                         yield msg
                     msgList.clear()
 
+        print(f"JsonMsgRouter. {peer} exit")
         # with self.lock:
         #     del self.msgDic[id]
 
