@@ -28,7 +28,7 @@ class Handler(pb2_grpc.LiveMessagerServicer):
 
     def HandleJsonMsg(self,request:pb2.StringMsg,context):
         # print('HandleJsonMsg',threading.get_ident())
-        Log(f"收到:{request} {context.peer()}")
+        # Log(f"收到:{request} {context.peer()}")
         with self.lock:
             for k in self.msgDic:
                 self.msgDic[k].append(request)
