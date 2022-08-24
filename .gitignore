@@ -1,2 +1,5 @@
 /__pycache__
 /server.log
+/main.spec
+/build
+/dist
