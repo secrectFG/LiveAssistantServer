@@ -20,9 +20,9 @@ class LiveMessagerStub(object):
                 request_serializer=grpc__pb2.StringMsg.SerializeToString,
                 response_deserializer=grpc__pb2.StringMsg.FromString,
                 )
-        self.ServerStringRouter = channel.stream_stream(
-                '/LiveProto.LiveMessager/ServerStringRouter',
-                request_serializer=grpc__pb2.StringMsg.SerializeToString,
+        self.JsonMsgRouter = channel.unary_stream(
+                '/LiveProto.LiveMessager/JsonMsgRouter',
+                request_serializer=grpc__pb2.Empty.SerializeToString,
                 response_deserializer=grpc__pb2.StringMsg.FromString,
                 )
 
@@ -38,7 +38,7 @@ class LiveMessagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def ServerStringRouter(self, request_iterator, context):
+    def JsonMsgRouter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -52,9 +52,9 @@ def add_LiveMessagerServicer_to_server(servicer, server):
                     request_deserializer=grpc__pb2.StringMsg.FromString,
                     response_serializer=grpc__pb2.StringMsg.SerializeToString,
             ),
-            'ServerStringRouter': grpc.stream_stream_rpc_method_handler(
-                    servicer.ServerStringRouter,
-                    request_deserializer=grpc__pb2.StringMsg.FromString,
+            'JsonMsgRouter': grpc.unary_stream_rpc_method_handler(
+                    servicer.JsonMsgRouter,
+                    request_deserializer=grpc__pb2.Empty.FromString,
                     response_serializer=grpc__pb2.StringMsg.SerializeToString,
             ),
     }
@@ -86,7 +86,7 @@ class LiveMessager(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def ServerStringRouter(request_iterator,
+    def JsonMsgRouter(request,
             target,
             options=(),
             channel_credentials=None,
@@ -96,8 +96,8 @@ class LiveMessager(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.stream_stream(request_iterator, target, '/LiveProto.LiveMessager/ServerStringRouter',
-            grpc__pb2.StringMsg.SerializeToString,
+        return grpc.experimental.unary_stream(request, target, '/LiveProto.LiveMessager/JsonMsgRouter',
+            grpc__pb2.Empty.SerializeToString,
             grpc__pb2.StringMsg.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

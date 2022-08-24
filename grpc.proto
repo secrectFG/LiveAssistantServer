@@ -6,7 +6,7 @@ package LiveProto;
 service LiveMessager {
   // Sends a greeting
   rpc HandleJsonMsg (StringMsg) returns (StringMsg);
-  rpc ServerStringRouter(stream StringMsg) returns (stream StringMsg);
+  rpc JsonMsgRouter(Empty) returns (stream StringMsg);
 }
 
 message Empty{}

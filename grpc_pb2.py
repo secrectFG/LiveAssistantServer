@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\ngrpc.proto\x12\tLiveProto\"\x07\n\x05\x45mpty\"*\n\tStringMsg\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\x0f\n\x07jsonStr\x18\x02 \x01(\t2\x91\x01\n\x0cLiveMessager\x12;\n\rHandleJsonMsg\x12\x14.LiveProto.StringMsg\x1a\x14.LiveProto.StringMsg\x12\x44\n\x12ServerStringRouter\x12\x14.LiveProto.StringMsg\x1a\x14.LiveProto.StringMsg(\x01\x30\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\ngrpc.proto\x12\tLiveProto\"\x07\n\x05\x45mpty\"*\n\tStringMsg\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\x0f\n\x07jsonStr\x18\x02 \x01(\t2\x86\x01\n\x0cLiveMessager\x12;\n\rHandleJsonMsg\x12\x14.LiveProto.StringMsg\x1a\x14.LiveProto.StringMsg\x12\x39\n\rJsonMsgRouter\x12\x10.LiveProto.Empty\x1a\x14.LiveProto.StringMsg0\x01\x62\x06proto3')
 
 
 
@@ -43,5 +43,5 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _STRINGMSG._serialized_start=34
   _STRINGMSG._serialized_end=76
   _LIVEMESSAGER._serialized_start=79
-  _LIVEMESSAGER._serialized_end=224
+  _LIVEMESSAGER._serialized_end=213
 # @@protoc_insertion_point(module_scope)
