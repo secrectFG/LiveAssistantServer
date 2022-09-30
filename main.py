@@ -1,6 +1,8 @@
+from sympy import im
 import grpc_pb2 as pb2
 import grpc_pb2_grpc as pb2_grpc 
 import time
+import os
 import logging
 from concurrent import futures
 import grpc
@@ -63,16 +65,19 @@ class Handler(pb2_grpc.LiveMessagerServicer):
         # with self.lock:
         #     del self.msgDic[id]
 
+file_path = os.path.dirname(os.path.realpath(__file__))
+iconpath = file_path+'/icon.ico'
 
 def runWindow(exitCallback):
     menu = ['', ['显示窗口', '隐藏窗口',  '---',  '退出']]
     title = '弹幕路由服务器'
     layout = [
+        [sg.Text('----------------------------------------------------------')],
         [sg.B("隐藏"),sg.B("退出")]
     ]
 
-    window = sg.Window(title, layout, finalize=True, enable_close_attempted_event=True)
-    tray = SystemTray(menu, single_click_events=False, window=window, tooltip=title)
+    window = sg.Window(title, layout, finalize=True, enable_close_attempted_event=True,icon=iconpath,element_justification='c')
+    tray = SystemTray(menu, single_click_events=False, window=window, tooltip=title,icon=iconpath)
     window.hide()
     while True:
         event, values = window.read(timeout=500)
