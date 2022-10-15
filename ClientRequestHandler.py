@@ -1,0 +1,22 @@
+import grpc_pb2 as pb2
+import json
+
+import asyncio
+from bilibili_api import user
+
+async def run_async(func):
+    info = func()
+
+
+def Handle(jsonStr):
+    jsonr = json.loads(jsonStr)
+    requestType = jsonr['requestType']
+    if requestType=='GetBilibiliUserInfo':
+        u = user.User(jsonr['userid'])
+        async def User_get_user_info():
+            info = await u.get_user_info()
+            return info
+        r = asyncio.run(User_get_user_info())
+        return pb2.StringMsg(jsonStr=json.dumps(r))
+            
+    return pb2.StringMsg() 

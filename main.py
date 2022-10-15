@@ -9,6 +9,7 @@ import grpc
 import threading
 import PySimpleGUI as sg
 from psgtray import SystemTray
+import ClientRequestHandler
 
 logging.basicConfig(filename='server.log',
 level=logging.DEBUG,
@@ -31,6 +32,10 @@ class Handler(pb2_grpc.LiveMessagerServicer):
     def HandleJsonMsg(self,request:pb2.StringMsg,context):
         # print('HandleJsonMsg',threading.get_ident())
         # Log(f"收到:{request} {context.peer()}")
+
+        if request.type == 'ClientRequestHandle':
+            return ClientRequestHandler.Handle(request.jsonStr)
+
         with self.lock:
             for k in self.msgDic:
                 self.msgDic[k].append(request)
