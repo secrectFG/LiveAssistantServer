@@ -4,9 +4,6 @@ import json
 import asyncio
 from bilibili_api import user
 
-async def run_async(func):
-    info = func()
-
 
 def Handle(jsonStr):
     jsonr = json.loads(jsonStr)

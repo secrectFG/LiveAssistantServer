@@ -1,11 +1,11 @@
 from sympy import im
+import grpc
 import grpc_pb2 as pb2
 import grpc_pb2_grpc as pb2_grpc 
 import time
 import os
 import logging
 from concurrent import futures
-import grpc
 import threading
 import PySimpleGUI as sg
 from psgtray import SystemTray

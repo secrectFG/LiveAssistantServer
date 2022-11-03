@@ -17,6 +17,7 @@ message Empty{}
 message StringMsg {
 	string type = 1;
 	string jsonStr = 2;
+  bytes pbdata = 3;
 }
 
 
