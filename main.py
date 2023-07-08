@@ -1,4 +1,5 @@
-from sympy import im
+#python版本 3.10.9
+import sys
 import grpc
 import grpc_pb2 as pb2
 import grpc_pb2_grpc as pb2_grpc 
@@ -70,8 +71,17 @@ class Handler(pb2_grpc.LiveMessagerServicer):
         # with self.lock:
         #     del self.msgDic[id]
 
-file_path = os.path.dirname(os.path.realpath(__file__))
-iconpath = file_path+'/icon.ico'
+thisdir = os.path.dirname(os.path.realpath(__file__))
+
+#如果是打包的程序
+if getattr(sys, 'frozen', False):
+    # 打包程序
+    print('打包程序')
+    thisdir = os.path.dirname(sys.executable)
+
+iconpath = thisdir+'/icon.ico'
+print('iconpath:',iconpath)
+
 
 def runWindow(exitCallback):
     menu = ['', ['显示窗口', '隐藏窗口',  '---',  '退出']]

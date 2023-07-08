@@ -1,2 +1,2 @@
-call conda activate base
+call .venv\Scripts\activate.bat
 start pythonw main.py
