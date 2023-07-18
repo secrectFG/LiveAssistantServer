@@ -35,7 +35,11 @@ class Handler(pb2_grpc.LiveMessagerServicer):
         # Log(f"收到:{request} {context.peer()}")
 
         if request.type == 'ClientRequestHandle':
-            return ClientRequestHandler.Handle(request.jsonStr)
+            try:
+                return ClientRequestHandler.Handle(request.jsonStr)
+            except Exception as e:
+                Log(f"ClientRequestHandle error:{e}")
+                return pb2.StringMsg(jsonStr='{"error":"'+str(e)+'"}')
 
         with self.lock:
             for k in self.msgDic:
