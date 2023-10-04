@@ -1,4 +1,5 @@
 #python版本 3.10.9
+import json
 import sys
 import grpc
 import grpc_pb2 as pb2
@@ -87,9 +88,10 @@ iconpath = thisdir+'/icon.ico'
 print('iconpath:',iconpath)
 
 
-def runWindow(exitCallback):
+
+def runWindow(exitCallback, port):
     menu = ['', ['显示窗口', '隐藏窗口',  '---',  '退出']]
-    title = '弹幕路由服务器'
+    title = f'弹幕路由服务器(端口:{port})'
     layout = [
         [sg.Text('----------------------------------------------------------')],
         [sg.B("隐藏"),sg.B("退出")]
@@ -122,7 +124,22 @@ def runWindow(exitCallback):
 
 def main():
 
-    port = 17989
+    curpath = os.path.dirname(os.path.realpath(__file__))
+    #判断是否是打包的程序
+    if getattr(sys, 'frozen', False):
+        # 打包程序
+        print('打包程序')
+        curpath = os.path.dirname(sys.executable)
+    
+    configpath = curpath+'/config.json'
+    #读取配置文件
+    config = {}
+    if os.path.exists(configpath):
+        with open(configpath,'r') as f:
+            config = json.load(f)
+
+    port = config.get('port',9798)
+
     listen_addr = f'[::]:{port}'
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     pb2_grpc.add_LiveMessagerServicer_to_server(Handler(), server)
@@ -142,7 +159,7 @@ def main():
         print('Server stop')
 
 
-    runWindow(exitCallback)
+    runWindow(exitCallback, port)
 
     
 
