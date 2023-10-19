@@ -2,5 +2,5 @@
 /server.log
 /main.spec
 /build
-/dist
 /.venv
+/dist/*.log
