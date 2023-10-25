@@ -5,11 +5,13 @@ import asyncio
 from bilibili_api import user
 
 
+
 def Handle(jsonStr):
     jsonr = json.loads(jsonStr)
     requestType = jsonr['requestType']
     if requestType=='GetBilibiliUserInfo':
         u = user.User(jsonr['userid'])
+        # print(f'GetBilibiliUserInfo userid:{jsonr["userid"]}')
         async def User_get_user_info():
             info = await u.get_user_info()
             return info
