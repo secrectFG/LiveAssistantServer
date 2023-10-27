@@ -4,3 +4,4 @@
 /build
 /.venv
 /dist/*.log
+credential.json
