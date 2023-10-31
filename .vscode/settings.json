@@ -2,5 +2,22 @@
     "[python]": {
         "editor.defaultFormatter": "ms-python.autopep8"
     },
-    "python.formatting.provider": "none"
+    "python.formatting.provider": "none",
+    //排除文件夹
+    "files.exclude":
+    {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/.venv": true,
+        "**/__pycache__": true,
+        "**/build": true,
+        "**/dist": true,
+        "main.spec": true,
+        "noconsole-main.spec": true,
+        "noconsole.spec":true,
+
+    },
 }
