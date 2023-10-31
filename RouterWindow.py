@@ -5,6 +5,8 @@ from tkinter import messagebox
 import PySimpleGUI as sg
 from psgtray import SystemTray
 import BiliBiliLiveConnect
+from bilibili_api import live
+import DMSimulate
 
 thisdir = os.path.dirname(os.path.realpath(__file__))
 
@@ -29,7 +31,7 @@ async def runWindow(exitCallback, port, router, logFunc):
     menu = ['', ['显示窗口', '隐藏窗口',  '---',  '退出']]
     title = f'弹幕路由服务器(端口:{port})'
     layout = [
-        [sg.Text('----------------------未连接直播间--------------------------', key='-RoomInfo-')],
+        [sg.Text('未连接直播间', key='-RoomInfo-')],
         #输入框 模拟弹幕内容：_____
         [sg.Text('模拟弹幕内容：'),sg.InputText(key='-DanmuContent-', default_text=windowConfig.get('-DanmuContent-','j'))],
         #输入框 模拟弹幕ID：_____
@@ -54,6 +56,23 @@ async def runWindow(exitCallback, port, router, logFunc):
     danmuTask = None
     while True:
         await asyncio.sleep(0.01)
+
+        room:live.LiveDanmaku = BiliBiliLiveConnect.room
+        if not room is None:
+            status = room.get_status()
+            if status == live.LiveDanmaku.STATUS_INIT:
+                window['-RoomInfo-'].update('正在初始化连接')
+            elif status == live.LiveDanmaku.STATUS_CONNECTING:
+                window['-RoomInfo-'].update('正在连接直播间')
+            elif status == live.LiveDanmaku.STATUS_ESTABLISHED:
+                window['-RoomInfo-'].update(f'已连接直播间:{room.room_display_id}')
+            elif status == live.LiveDanmaku.STATUS_CLOSING:
+                window['-RoomInfo-'].update('正在断开连接')
+            elif status == live.LiveDanmaku.STATUS_CLOSED:
+                window['-RoomInfo-'].update('已断开连接')
+            else:
+                window['-RoomInfo-'].update('未连接直播间')
+
         event, values = window.read(timeout=100)
         if event =='-WINDOW CLOSE ATTEMPTED-':
             window.hide()
@@ -86,6 +105,13 @@ async def runWindow(exitCallback, port, router, logFunc):
             window['-ConnectRoom-'].update(visible=True)
             #隐藏断开连接按钮
             window['-DisconnectRoom-'].update(visible=False)
+
+
+        #发送模拟弹幕
+        if event == '-SendDanmu-':
+            print('发送模拟弹幕')
+            DMSimulate.Send(router, values['-DanmuID-'], values['-DanmuSender-'], values['-DanmuContent-'])
+            
 
         if event =='退出':
             break
