@@ -1,9 +1,11 @@
 
 import asyncio
+import os
 from tkinter import messagebox
 from bilibili_api import login, user, live
 import json
 import DanmuHandler
+import QRCodeWIndow
 
 room:live.LiveDanmaku = None
 autoReconnect = False
@@ -48,7 +50,9 @@ async def run(roomid, router, debug=False):
         if credential is None:
             print("请登录：")
             # credential = login.login_with_qrcode_term() # 在终端扫描二维码登录
-            credential = login.login_with_qrcode() # 使用窗口显示二维码登录
+            # credential = login.login_with_qrcode() # 使用窗口显示二维码登录
+            credential = await QRCodeWIndow.show()
+
             try:
                 credential.raise_for_no_bili_jct() # 判断是否成功
                 credential.raise_for_no_sessdata() # 判断是否成功
@@ -62,7 +66,7 @@ async def run(roomid, router, debug=False):
                 saveToJson(data, "credential.json")
             except:
                 print("登陆失败。。。")
-                exit()
+                return
 
         # info = await user.get_self_info(credential)
         # print("欢迎，", info['name'], "!")

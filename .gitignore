@@ -5,3 +5,5 @@
 /.venv
 /dist/*.log
 credential.json
+noconsole.spec
+noconsole-main.spec
