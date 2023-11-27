@@ -119,6 +119,10 @@ async def runWindow(exitCallback, port, router, logFunc):
             window.hide()
             tray.show_icon()
 
+        #非超时事件
+        if event is not '__TIMEOUT__':
+            sg.user_settings_set_entry('windowConfig', values)
+
     tray.close()            # optional but without a close, the icon may "linger" until moused over
     window.close()
 
