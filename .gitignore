@@ -3,6 +3,7 @@
 /main.spec
 /build
 /.venv
+/venv
 /dist/*.log
 credential.json
 noconsole.spec

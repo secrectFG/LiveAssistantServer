@@ -1,13 +1,31 @@
 import asyncio
 import time
+
+import httpx
 import PySimpleGUI as sg
 from bilibili_api import login
 
+from bilibili_api.utils.utils import get_api
+API = get_api("login")
+
+def update_qrcode_data() -> dict:
+    api = API["qrcode"]["get_qrcode_and_token"]
+    url = api["url"]
+
+    headers = {
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36'
+    }
+    result = httpx.get(url, follow_redirects=True, headers=headers)
+    print('result=',result)
+    jsondic = result.json()
+    qrcode_data = jsondic["data"]
+    return qrcode_data
+
+
+
 async def show():
 
-
-
-    qrcode_data = login.update_qrcode_data()
+    qrcode_data = update_qrcode_data()
     login_key = qrcode_data["qrcode_key"]
     qrcode_image = login.make_qrcode(qrcode_data["url"])
 

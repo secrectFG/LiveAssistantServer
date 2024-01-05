@@ -1,4 +1,4 @@
-#python版本 3.10.9
+#python版本 3.10.x
 import asyncio
 import json
 import sys
@@ -13,7 +13,7 @@ import threading
 
 import ClientRequestHandler
 import RouterWindow
-import BiliBiliLiveConnect
+
 
 logging.basicConfig(filename='server.log',
 level=logging.DEBUG,

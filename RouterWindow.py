@@ -7,6 +7,10 @@ from psgtray import SystemTray
 import BiliBiliLiveConnect
 from bilibili_api import live
 import DMSimulate
+import platform
+
+def is_macos():
+    return platform.system() == 'Darwin'
 
 thisdir = os.path.dirname(os.path.realpath(__file__))
 
@@ -49,11 +53,15 @@ async def runWindow(exitCallback, port, router, logFunc):
         [sg.B("隐藏"),sg.B("退出")]
     ]
 
+
     window = sg.Window(title, layout, finalize=True, enable_close_attempted_event=True,icon=iconpath,element_justification='c')
-    tray = SystemTray(menu, single_click_events=False, window=window, tooltip=title,icon=iconpath)
+    tray = None
+    if not is_macos():
+        tray = SystemTray(menu, single_click_events=False, window=window, tooltip=title,icon=iconpath)
     # window.hide()
     values = None
     danmuTask = None
+    
     while True:
         await asyncio.sleep(0.01)
 
@@ -119,7 +127,8 @@ async def runWindow(exitCallback, port, router, logFunc):
             window.hide()
             tray.show_icon()
 
-    tray.close()            # optional but without a close, the icon may "linger" until moused over
+    if tray:
+        tray.close()            # optional but without a close, the icon may "linger" until moused over
     window.close()
 
     # for key in windowConfig:

@@ -11,7 +11,7 @@ class MsgTypeEnum(Enum):
     LiveEnd = "直播结束"
     Unknown = "其他"
     WelcomeGuard = "欢迎船员"
-    GuardBuy = "购买船票（上船）"
+    GuardBuy = "购买船票(上船)"
     SuperChat = "SC"
     Interact = "观众互动信息"
     Warning = "超管警告"
