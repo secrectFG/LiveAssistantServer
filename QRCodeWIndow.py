@@ -1,5 +1,6 @@
 import asyncio
 import time
+import uuid
 
 import httpx
 import PySimpleGUI as sg
@@ -8,19 +9,31 @@ from bilibili_api import login
 from bilibili_api.utils.utils import get_api
 API = get_api("login")
 
+headers = {
+'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36'
+}
+
 def update_qrcode_data() -> dict:
     api = API["qrcode"]["get_qrcode_and_token"]
     url = api["url"]
 
-    headers = {
-    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36'
-    }
+
     result = httpx.get(url, follow_redirects=True, headers=headers)
     print('result=',result)
     jsondic = result.json()
     qrcode_data = jsondic["data"]
     return qrcode_data
 
+def login_with_key(key: str) -> dict:
+    params = {"qrcode_key": key, "source": "main-fe-header"}
+    events_api = API["qrcode"]["get_events"]
+    events = httpx.get(
+        events_api["url"],
+        params=params,
+        headers=headers,
+        cookies={"buvid3": str(uuid.uuid1()), "Domain": ".bilibili.com"},
+    ).json()
+    return events
 
 
 async def show():
@@ -46,7 +59,7 @@ async def show():
         await asyncio.sleep(0.01)
         event, values = window.read(timeout=500)
 
-        events = login.login_with_key(login_key)
+        events = login_with_key(login_key)
 
         if "code" in events.keys() and events["code"] == 0:
             if events["data"]["code"] == 86101:
@@ -64,7 +77,8 @@ async def show():
                 break
 
             if time.time() - starttime > 120:  # 二维码有效期为120秒
-                qrcode_data = login.update_qrcode_data()
+                print('二维码过期')
+                qrcode_data = update_qrcode_data()
                 login_key = qrcode_data["qrcode_key"]
                 qrcode_image = login.make_qrcode(qrcode_data["url"])
                 #更新图片
